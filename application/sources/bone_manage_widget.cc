@@ -272,8 +272,12 @@ bool BoneManageWidget::eventFilter(QObject* watched, QEvent* event)
             if (m_skeletonGraphicsWidget) {
                 std::set<dust3d::Uuid> unassignedEdgeIds;
                 for (const auto& it : m_document->edgeMap) {
-                    if (it.second.boneName.isEmpty())
+                    if (it.second.boneName.isEmpty()) {
+                        auto partIt = m_document->partMap.find(it.second.partId);
+                        if (partIt != m_document->partMap.end() && dust3d::PartTarget::CutFace == partIt->second.target)
+                            continue;
                         unassignedEdgeIds.insert(it.first);
+                    }
                 }
                 m_skeletonGraphicsWidget->highlightEdges(unassignedEdgeIds);
             }
@@ -285,8 +289,12 @@ bool BoneManageWidget::eventFilter(QObject* watched, QEvent* event)
                 m_skeletonGraphicsWidget->clearEdgeHighlights();
                 m_skeletonGraphicsWidget->unselectAll();
                 for (const auto& it : m_document->edgeMap) {
-                    if (it.second.boneName.isEmpty())
+                    if (it.second.boneName.isEmpty()) {
+                        auto partIt = m_document->partMap.find(it.second.partId);
+                        if (partIt != m_document->partMap.end() && dust3d::PartTarget::CutFace == partIt->second.target)
+                            continue;
                         m_skeletonGraphicsWidget->addSelectEdgeOnSideProfile(it.first);
+                    }
                 }
             }
         }
@@ -700,11 +708,15 @@ void BoneManageWidget::updateBoneTreeLabels()
 
 void BoneManageWidget::updateAssignProgressBar()
 {
-    int totalEdges = (int)m_document->edgeMap.size();
+    int totalEdges = 0;
     int assignedEdges = 0;
     for (const auto& it : m_document->edgeMap) {
+        auto partIt = m_document->partMap.find(it.second.partId);
+        if (partIt != m_document->partMap.end() && dust3d::PartTarget::CutFace == partIt->second.target)
+            continue;
+        ++totalEdges;
         if (!it.second.boneName.isEmpty())
-            assignedEdges++;
+            ++assignedEdges;
     }
 
     m_assignProgressBar->setMaximum(totalEdges);
