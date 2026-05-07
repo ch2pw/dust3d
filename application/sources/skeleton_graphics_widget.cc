@@ -163,6 +163,38 @@ void SkeletonGraphicsWidget::shortcutEscape()
     }
 }
 
+void SkeletonGraphicsWidget::shortcutShowComponentProperty()
+{
+    if (!isVisible())
+        return;
+
+    std::set<dust3d::Uuid> partIds;
+    for (const auto& item : m_rangeSelectionSet) {
+        if (item->data(0) == "node") {
+            const auto* node = m_document->findNode(((SkeletonGraphicsNodeItem*)item)->id());
+            if (nullptr != node)
+                partIds.insert(node->partId);
+        } else if (item->data(0) == "edge") {
+            const auto* edge = m_document->findEdge(((SkeletonGraphicsEdgeItem*)item)->id());
+            if (nullptr != edge)
+                partIds.insert(edge->partId);
+        }
+    }
+    if (nullptr != m_hoveredNodeItem) {
+        const auto* node = m_document->findNode(m_hoveredNodeItem->id());
+        if (nullptr != node)
+            partIds.insert(node->partId);
+    } else if (nullptr != m_hoveredEdgeItem) {
+        const auto* edge = m_document->findEdge(m_hoveredEdgeItem->id());
+        if (nullptr != edge)
+            partIds.insert(edge->partId);
+    }
+    if (partIds.empty())
+        return;
+
+    emit showComponentPropertyRequested(partIds);
+}
+
 void SkeletonGraphicsWidget::showContextMenu(const QPoint& pos)
 {
     if (Document::EditMode::Add == m_document->editMode) {

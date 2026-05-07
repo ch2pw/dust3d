@@ -79,6 +79,7 @@ signals:
     void showOrHideAllComponents();
     void shortcutToggleFlatShading();
     void shortcutToggleRotation();
+    void showComponentPropertyRequested(std::set<dust3d::Uuid> partIds);
     void loadedTurnaroundImageChanged();
     void nodePicked(const dust3d::Uuid& nodeId);
 
@@ -227,6 +228,7 @@ public slots:
     void shortcutChamferedOrNotSelectedPart();
     void shortcutSelectAll();
     void shortcutEscape();
+    void shortcutShowComponentProperty();
     void clearRangeSelection();
     void switchProfileOnRangeSelection();
 private slots:

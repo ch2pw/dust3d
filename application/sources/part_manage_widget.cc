@@ -161,6 +161,28 @@ void PartManageWidget::showSelectedComponentProperties()
         QCursor::pos().y()));
 }
 
+void PartManageWidget::showComponentPropertyForParts(std::set<dust3d::Uuid> partIds)
+{
+    std::vector<dust3d::Uuid> componentIds;
+    for (const auto& partId : partIds) {
+        const auto* part = m_document->findPart(partId);
+        if (nullptr == part)
+            continue;
+        componentIds.push_back(part->componentId);
+    }
+    if (componentIds.empty())
+        return;
+
+    auto* propertyWidget = new ComponentPropertyWidget(m_document, componentIds);
+
+    m_contextMenu.reset(new QMenu(this->parentWidget()));
+    QWidgetAction* widgetAction = new QWidgetAction(m_contextMenu.get());
+    widgetAction->setDefaultWidget(propertyWidget);
+    m_contextMenu->addAction(widgetAction);
+
+    m_contextMenu->popup(QCursor::pos());
+}
+
 void PartManageWidget::selectComponentByPartId(const dust3d::Uuid& partId)
 {
     const auto& part = m_document->findPart(partId);

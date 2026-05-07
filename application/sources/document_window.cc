@@ -721,6 +721,7 @@ DocumentWindow::DocumentWindow()
     connect(m_partManageWidget, &PartManageWidget::selectPartOnCanvas, canvasGraphicsWidget, &SkeletonGraphicsWidget::addPartToSelection);
 
     connect(canvasGraphicsWidget, &SkeletonGraphicsWidget::partComponentChecked, m_partManageWidget, &PartManageWidget::selectComponentByPartId);
+    connect(canvasGraphicsWidget, &SkeletonGraphicsWidget::showComponentPropertyRequested, m_partManageWidget, &PartManageWidget::showComponentPropertyForParts);
 
     connect(m_document, &Document::skeletonChanged, m_document, &Document::generateMesh);
     connect(m_document, &Document::textureChanged, m_document, &Document::generateTexture);
@@ -2146,6 +2147,7 @@ void DocumentWindow::initializeToolShortcuts(SkeletonGraphicsWidget* graphicsWid
     defineShortcut(Qt::Key_R, graphicsWidget, &SkeletonGraphicsWidget::shortcutToggleRotation);
     defineShortcut(Qt::Key_O, graphicsWidget, &SkeletonGraphicsWidget::shortcutToggleFlatShading);
     defineShortcut(Qt::Key_W, graphicsWidget, &SkeletonGraphicsWidget::shortcutToggleWireframe);
+    defineShortcut(Qt::Key_Space, graphicsWidget, &SkeletonGraphicsWidget::shortcutShowComponentProperty);
     defineShortcut(Qt::Key_Escape, graphicsWidget, &SkeletonGraphicsWidget::shortcutEscape);
 }
 
