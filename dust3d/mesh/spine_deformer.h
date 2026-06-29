@@ -40,8 +40,8 @@ namespace dust3d {
 // spine. Cross-sections are scaled to the interpolated node radius, squashed by
 // deformWidth (X) and deformThickness (Z), and spun by the cut rotation.
 //
-// This is the exact transformation used by the "Imported" part generator,
-// factored out so the "Rock" generator can deform along the spine the same way.
+// This is the transformation used by the ImportedModel part target to sweep an
+// imported mesh along the part's tube spine.
 class SpineDeformer {
 public:
     SpineDeformer(const std::vector<MeshNode>& meshNodes,
